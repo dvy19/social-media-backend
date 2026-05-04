@@ -1,7 +1,7 @@
 
 from importlib.resources import path
 
-from views import LoginView, RegisterView
+from .views import LoginView, RegisterView
 
 
 urlpatterns = [
