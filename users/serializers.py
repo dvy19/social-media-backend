@@ -4,6 +4,7 @@ from .models import CustomUser
 
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+
 class RegisterSerializer(serializers.ModelSerializer):
 
     # write_only = password will never be sent back in response

@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
     
 }
 
-AUTH_CUSTOM_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
