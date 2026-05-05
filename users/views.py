@@ -59,6 +59,6 @@ class RegisterView(APIView):
 
         else:
             # This will show you exactly what failed
-            #print(serializer.errors)  # Check your terminal/console
+            print(serializer.errors)  # Check your terminal/console
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
