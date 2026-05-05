@@ -23,7 +23,7 @@ urlpatterns = [
 
     path('api/accounts/', include('users.urls')),  # Include URLs from the api app
     
-    path('api/posts/',include('posts.urls')),  # Include URLs from the api app
+    #path('api/posts/',include('posts.urls')),   Include URLs from the api app
 ]
 
 
