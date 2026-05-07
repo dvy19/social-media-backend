@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, Profile
 
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -47,3 +47,11 @@ class LoginSerializer(serializers.Serializer):
             "refresh": str(refresh),
             "role": user.role
         }
+    
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ["first_name", "last_name", "city", "gender", "date_of_birth", "bio"]
+        read_only_fields = ['user' , 'created_at', 'updated_at']  # these fields cannot be updated after registration

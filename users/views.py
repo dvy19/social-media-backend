@@ -1,8 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
-from .serializers import LoginSerializer, RegisterSerializer# Create your views here.
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from .models import CustomUser
+from .serializers import LoginSerializer, ProfileSerializer, RegisterSerializer# Create your views here.
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -62,3 +64,25 @@ class RegisterView(APIView):
             print(serializer.errors)  # Check your terminal/console
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+
+class ProfileView(APIView):
+
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+        serializer=ProfileSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response({"message":"Profile created successfully"}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetAllUsersView(APIView):
+
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request):
+        users = CustomUser.objects.all()
+        data = [{"email": user.email, "role": user.role} for user in users]
+        return Response(data, status=status.HTTP_200_OK)
