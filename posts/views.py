@@ -16,7 +16,18 @@ class PostListCreateView(APIView):
 
     # get all posts
     def get(self, request):
-        posts = Post.objects.all().order_by('-created_at')
+
+        # get category from URL
+        category = request.query_params.get('category')
+
+        # if category exists
+        if category:
+            posts = Post.objects.filter(category=category).order_by('-created_at')
+
+        # otherwise return all posts
+        else:
+            posts = Post.objects.all().order_by('-created_at')
+
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
