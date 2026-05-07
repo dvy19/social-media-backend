@@ -64,19 +64,52 @@ class RegisterView(APIView):
             print(serializer.errors)  # Check your terminal/console
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-
 class ProfileView(APIView):
 
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
+    # create profile
     def post(self, request):
-        serializer=ProfileSerializer(data=request.data)
+
+        if hasattr(request.user, 'profile'):
+
+            return Response(
+                {"error": "Profile already exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = ProfileSerializer(data=request.data)
 
         if serializer.is_valid():
+
             serializer.save(user=request.user)
-            return Response({"message":"Profile created successfully"}, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(
+                {
+                    "message": "Profile created successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # get logged-in user's profile
+    def get(self, request):
+
+        if not hasattr(request.user, 'profile'):
+
+            return Response(
+                {"error": "Profile not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ProfileSerializer(request.user.profile)
+
+        return Response(serializer.data)
     
 class GetAllUsersView(APIView):
 

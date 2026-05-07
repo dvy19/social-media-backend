@@ -46,24 +46,39 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email} ({self.role})"
-    
+ 
 class Profile(models.Model):
 
-    user=models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="profile")
-    
-    
-    first_name=models.CharField(max_length=30)
-    last_name=models.CharField(max_length=30)
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
 
-    city=models.CharField(max_length=50, blank=True)
-    gender=models.CharField(max_length=10, blank=True)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="profile"
+    )
 
-    date_of_birth=models.DateField(null=True, blank=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
 
-    bio=models.TextField(blank=True)
+    city = models.CharField(max_length=50, blank=True)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES,
+        blank=True
+    )
+
+    date_of_birth = models.DateField(null=True, blank=True)
+
+    bio = models.TextField(blank=True)
+
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.email} Profile"

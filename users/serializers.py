@@ -51,7 +51,10 @@ class LoginSerializer(serializers.Serializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
 
+    user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Profile
-        fields = ["first_name", "last_name", "city", "gender", "date_of_birth", "bio"]
+        fields = ["first_name", "last_name", "city", "gender", "date_of_birth", "bio", 'user' , 'created_at', 'updated_at']
+        
         read_only_fields = ['user' , 'created_at', 'updated_at']  # these fields cannot be updated after registration
