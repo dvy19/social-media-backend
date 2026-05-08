@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import CustomUser
-from .serializers import LoginSerializer, ProfileSerializer, RegisterSerializer# Create your views here.
+from .models import CustomUser, Follow
+from .serializers import FollowSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer# Create your views here.
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -119,3 +119,44 @@ class GetAllUsersView(APIView):
         users = CustomUser.objects.all()
         data = [{"email": user.email, "role": user.role} for user in users]
         return Response(data, status=status.HTTP_200_OK)
+    
+
+class FollowUserView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        following_user = request.data.get('following')
+
+        if request.user.id == int(following_user):
+            return Response(
+                {'error': 'You cannot follow yourself'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Follow.objects.filter(
+            follower=request.user,
+            following_id=following_user
+        ).exists():
+
+            return Response(
+                {'error': 'Already following this user'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = FollowSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            serializer.save(follower=request.user)
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )

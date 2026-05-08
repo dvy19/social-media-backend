@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import CustomUser, Profile
+from .models import CustomUser, Follow, Profile
 
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -58,3 +58,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ["first_name", "last_name", "city", "gender", "date_of_birth", "bio", 'user' , 'created_at', 'updated_at']
         
         read_only_fields = ['user' , 'created_at', 'updated_at']  # these fields cannot be updated after registration
+
+class FollowSerializer(serializers.ModelSerializer):
+
+    follower = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = ['id', 'follower', 'following', 'created_at']
+        read_only_fields = ['id', 'follower', 'created_at']

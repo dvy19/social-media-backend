@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from .views import LoginView, ProfileView, RegisterView
+from .views import FollowUserView, LoginView, ProfileView, RegisterView
 
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
 
     path('create-profile/', ProfileView.as_view()),
 
+    path('follow/', FollowUserView.as_view()),
 ]
