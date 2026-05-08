@@ -2,7 +2,7 @@
 from datetime import date
 
 from rest_framework import serializers
-from .models import CustomUser, Follow, Profile
+from .models import CustomUser, Follow, Profile, SocialStats
 
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -51,24 +51,30 @@ class LoginSerializer(serializers.Serializer):
         }
     
 
+class SocialStatsSerializer(serializers.ModelSerializer):
+
+    followers_count = serializers.IntegerField(source="followers_count", read_only=True)
+    following_count = serializers.IntegerField(source="following_count", read_only=True)
+    posts_count = serializers.IntegerField(source="posts_count", read_only=True)
+
+    class Meta:
+        model = SocialStats
+        fields = ["followers_count", "following_count", "posts_count"]
+
+        
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    social_stats = SocialStatsSerializer(source="user.social_stats", read_only=True)
 
     class Meta:
         model = Profile
         fields = [
-            "id",  # optional but useful
-            "first_name",
-            "last_name",
-            "city",
-            "gender",
-            "date_of_birth",
-            "bio",
-            "user",
-            "created_at",
-            "updated_at",
+            "id", "first_name", "last_name", "city", "gender",
+            "date_of_birth", "bio", "user", "created_at", "updated_at",
+            "social_stats"
         ]
         read_only_fields = ["user", "created_at", "updated_at"]
+
 
     def validate_date_of_birth(self, value):
         if value and value > date.today():
@@ -83,3 +89,4 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ['id', 'follower', 'following', 'created_at']
         read_only_fields = ['id', 'follower', 'created_at']
+

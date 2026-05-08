@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import CustomUser, Follow
-from .serializers import FollowSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer# Create your views here.
+from .models import CustomUser, Follow, SocialStats
+from .serializers import FollowSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer# Create your views here.
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -142,6 +142,22 @@ class GetAllUsersView(APIView):
         data = [{"email": user.email, "role": user.role} for user in users]
         return Response(data, status=status.HTTP_200_OK)
     
+
+class SocialStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Ensure the user has a SocialStats record
+        try:
+            social_stats = request.user.social_stats
+        except SocialStats.DoesNotExist:
+            return Response(
+                {"error": "Social stats not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = SocialStatsSerializer(social_stats)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class FollowUserView(APIView):
 

@@ -85,7 +85,8 @@ class Profile(models.Model):
 
 
 class Follow(models.Model):
-    
+
+
     follower = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -105,3 +106,32 @@ class Follow(models.Model):
 
     def __str__(self):
         return f"{self.follower} follows {self.following}"
+    
+
+class SocialStats(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="social_stats"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def followers_count(self):
+        # Count how many users follow this user
+        return self.user.followers.count()
+
+    @property
+    def following_count(self):
+        # Count how many users this user follows
+        return self.user.following.count()
+
+    @property
+    def posts_count(self):
+        # Assuming you have a Post model linked to CustomUser
+        return self.user.posts.count()
+
+    def __str__(self):
+        return f"Social stats for {self.user.email}"
