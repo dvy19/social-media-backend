@@ -1,4 +1,6 @@
 
+from datetime import date
+
 from rest_framework import serializers
 from .models import CustomUser, Follow, Profile
 
@@ -50,14 +52,28 @@ class LoginSerializer(serializers.Serializer):
     
 
 class ProfileSerializer(serializers.ModelSerializer):
-
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ["first_name", "last_name", "city", "gender", "date_of_birth", "bio", 'user' , 'created_at', 'updated_at']
-        
-        read_only_fields = ['user' , 'created_at', 'updated_at']  # these fields cannot be updated after registration
+        fields = [
+            "id",  # optional but useful
+            "first_name",
+            "last_name",
+            "city",
+            "gender",
+            "date_of_birth",
+            "bio",
+            "user",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["user", "created_at", "updated_at"]
+
+    def validate_date_of_birth(self, value):
+        if value and value > date.today():
+            raise serializers.ValidationError("Date of birth cannot be in the future.")
+        return value
 
 class FollowSerializer(serializers.ModelSerializer):
 

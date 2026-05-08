@@ -111,6 +111,28 @@ class ProfileView(APIView):
 
         return Response(serializer.data)
     
+    def patch(self, request):
+        if not hasattr(request.user, 'profile'):
+            return Response(
+                {"error": "Profile not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        profile = request.user.profile
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Profile updated successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class GetAllUsersView(APIView):
 
     permission_classes=[IsAuthenticated]
