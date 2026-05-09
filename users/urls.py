@@ -12,5 +12,5 @@ urlpatterns = [
 
     path('follow/', FollowUserView.as_view()),
 
-    path('social-stats',SocialStatsView.as_view())
+    path('social-stats/',SocialStatsView.as_view())
 ]
