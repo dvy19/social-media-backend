@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import CustomUser, Follow, SocialStats
-from .serializers import FollowSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer# Create your views here.
+from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer# Create your views here.
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -198,3 +198,22 @@ class FollowUserView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+
+class FollowingListView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        # Get all follow records
+        followings = Follow.objects.filter(
+            follower=request.user
+        )
+
+        # Extract users being followed
+        users = [follow.following for follow in followings]
+
+        serializer = FollowingListSerializer(users, many=True)
+
+        return Response(serializer.data)

@@ -90,3 +90,11 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = ['id', 'follower', 'following', 'created_at']
         read_only_fields = ['id', 'follower', 'created_at']
 
+
+class FollowingListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email']
+        
+
