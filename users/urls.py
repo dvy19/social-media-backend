@@ -1,6 +1,5 @@
 
 from django.urls import path
-from flask import views
 
 from .views import FollowUserView, FollowingListView, LoginView, ProfileView, RegisterView, SocialStatsView, UserProfileView, search_users
 
