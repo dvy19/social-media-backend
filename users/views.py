@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import CustomUser, Follow, SocialStats
+from .models import CustomUser, Follow, Profile, SocialStats
 from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer, UserSearchSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -24,13 +24,19 @@ def search_users(request):
     query = request.GET.get('q')
 
     if query:
-        users = CustomUser.objects.filter(
-    username__icontains=query
-                )[:10]
-    else:
-        users = CustomUser.objects.none()
 
-    serializer = UserSearchSerializer(users, many=True)
+        profiles = Profile.objects.filter(
+            first_name__icontains=query
+        )[:10]
+
+    else:
+
+        profiles = Profile.objects.none()
+
+    serializer = UserSearchSerializer(
+        profiles,
+        many=True
+    )
 
     return Response(serializer.data)
 

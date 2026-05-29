@@ -29,7 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSearchSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = Profile
         fields = [
             "id", "first_name", "last_name", "city", "gender",
             "date_of_birth", "bio", "user", "created_at", "updated_at",
