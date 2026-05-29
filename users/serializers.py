@@ -32,8 +32,7 @@ class UserSearchSerializer(serializers.ModelSerializer):
         model = Profile
         fields = [
             "id", "first_name", "last_name", "city", "gender",
-            "date_of_birth", "bio", "user", "created_at", "updated_at",
-            "social_stats"
+            "date_of_birth", "bio", "user"
         ]
         read_only_fields = ["user", "created_at", "updated_at"]
 

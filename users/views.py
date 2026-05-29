@@ -21,13 +21,20 @@ def get_tokens_for_user(user):
 @api_view(['GET'])
 def search_users(request):
 
+    print(request.GET)
+
     query = request.GET.get('q')
+
+    print(query)
 
     if query:
 
         profiles = Profile.objects.filter(
             first_name__icontains=query
         )[:10]
+
+        print(profiles)
+
 
     else:
 
