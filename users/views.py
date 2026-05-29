@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import CustomUser, Follow, SocialStats
-from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer# Create your views here.
+from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer, UserSearchSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
