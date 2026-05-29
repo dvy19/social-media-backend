@@ -165,8 +165,11 @@ class ProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    # get profile of user by id
-    def user_profile(request, id):
+class UserProfileView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id):
 
         profile = Profile.objects.get(id=id)
 
@@ -174,7 +177,7 @@ class ProfileView(APIView):
 
         return Response(serializer.data)
     
-    
+
 class GetAllUsersView(APIView):
 
     permission_classes=[IsAuthenticated]

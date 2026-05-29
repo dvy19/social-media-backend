@@ -2,7 +2,7 @@
 from django.urls import path
 from flask import views
 
-from .views import FollowUserView, FollowingListView, LoginView, ProfileView, RegisterView, SocialStatsView, search_users
+from .views import FollowUserView, FollowingListView, LoginView, ProfileView, RegisterView, SocialStatsView, UserProfileView, search_users
 
 
 urlpatterns = [
@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('create-profile/', ProfileView.as_view()),
 
-    path('create-profile/<int:id>/',views.user_profile, name='user-profile'),
+    path('friend-profile/<int:id>/', UserProfileView.as_view(), name='user-profile'),
 
 
     path('follow/', FollowUserView.as_view()),
