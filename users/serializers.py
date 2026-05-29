@@ -26,6 +26,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 
+class UserSearchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id", "first_name", "last_name", "city", "gender",
+            "date_of_birth", "bio", "user", "created_at", "updated_at",
+            "social_stats"
+        ]
+        read_only_fields = ["user", "created_at", "updated_at"]
+
+
 class LoginSerializer(serializers.Serializer):
 
     email    = serializers.EmailField()

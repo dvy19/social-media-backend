@@ -7,6 +7,7 @@ from .models import CustomUser, Follow, SocialStats
 from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer# Create your views here.
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view
 
 
 def get_tokens_for_user(user):
@@ -16,6 +17,22 @@ def get_tokens_for_user(user):
         "access":  str(refresh.access_token),
     }
 
+
+@api_view(['GET'])
+def search_users(request):
+
+    query = request.GET.get('q')
+
+    if query:
+        users = CustomUser.objects.filter(
+    username__icontains=query
+                )[:10]
+    else:
+        users = CustomUser.objects.none()
+
+    serializer = UserSearchSerializer(users, many=True)
+
+    return Response(serializer.data)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]  # no auth needed to login
