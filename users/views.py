@@ -7,7 +7,7 @@ from .models import CustomUser, Follow, Profile, SocialStats
 from .serializers import FollowSerializer, FollowingListSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer, SocialStatsSerializer, UserSearchSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 
 def get_tokens_for_user(user):
@@ -19,6 +19,7 @@ def get_tokens_for_user(user):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def search_users(request):
 
     print(request.GET)
