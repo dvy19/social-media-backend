@@ -21,7 +21,7 @@ class CreateConversationAPIView(APIView):
 
         current_user = request.user
 
-        other_user_id = request.data.get("user_id")
+        other_user_id = request.data.get("id")
 
         try:
             other_user = settings.AUTH_USER_MODEL.objects.get(
