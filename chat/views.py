@@ -1,7 +1,7 @@
 from email.message import Message
 
 
-from accounts.models import Profile
+from users.models import Profile
 
 from django.shortcuts import render
 from django.conf import settings
@@ -65,6 +65,8 @@ class CreateConversationAPIView(APIView):
         return Response({
             "conversation_id": conversation.id
         })
+    
+
 class SendMessageAPIView(APIView):
 
     def post(self, request):
