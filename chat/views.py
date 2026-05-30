@@ -1,5 +1,8 @@
 from email.message import Message
 
+
+from accounts.models import Profile
+
 from django.shortcuts import render
 from django.conf import settings
 from rest_framework.views import APIView
@@ -14,6 +17,11 @@ from .serializer import MessageSerializer
 
 from .models import Conversation
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 
 class CreateConversationAPIView(APIView):
 
@@ -21,16 +29,17 @@ class CreateConversationAPIView(APIView):
 
         current_user = request.user
 
-        other_user_id = request.data.get("id")
+        profile_id = request.data.get("profile_id")
 
         try:
-            other_user = settings.AUTH_USER_MODEL.objects.get(
-                id=other_user_id
-            )
+            profile = Profile.objects.get(id=profile_id)
 
-        except settings.AUTH_USER_MODEL.DoesNotExist:
+            other_user = profile.user
+
+        except Profile.DoesNotExist:
+
             return Response(
-                {"error": "User not found"},
+                {"error": "Profile not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -41,6 +50,7 @@ class CreateConversationAPIView(APIView):
         ).first()
 
         if conversation:
+
             return Response({
                 "conversation_id": conversation.id
             })
@@ -55,7 +65,6 @@ class CreateConversationAPIView(APIView):
         return Response({
             "conversation_id": conversation.id
         })
-    
 class SendMessageAPIView(APIView):
 
     def post(self, request):
