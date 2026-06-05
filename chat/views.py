@@ -96,7 +96,7 @@ class SendMessageAPIView(APIView):
             text=text
         )
 
-        serializer =    MessageSerializer(
+        serializer =MessageSerializer(
             message
         )
 
