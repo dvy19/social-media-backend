@@ -4,8 +4,17 @@ from .models import Post
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-
 class PostUserSerializer(serializers.ModelSerializer):
+
+    first_name = serializers.CharField(
+        source="profile.first_name",
+        read_only=True
+    )
+
+    last_name = serializers.CharField(
+        source="profile.last_name",
+        read_only=True
+    )
 
     city = serializers.CharField(
         source="profile.city",
@@ -13,15 +22,14 @@ class PostUserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = User
+        model =User
         fields = [
             "id",
+            "email",
             "first_name",
             "last_name",
-            "email",
             "city"
         ]
-
 class PostSerializer(serializers.ModelSerializer):
 
     user = PostUserSerializer(read_only=True)
