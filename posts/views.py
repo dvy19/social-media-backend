@@ -5,8 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
-from .models import Post
+from .models import Like, Post
 from .serializers import PostSerializer
 
 
@@ -50,6 +51,7 @@ class PostListCreateView(APIView):
 
 # single posts view, update, delete
 class PostDetailView(APIView):
+
 
     permission_classes = [IsAuthenticated]
 
@@ -98,3 +100,40 @@ class PostDetailView(APIView):
 
         post.delete()
         return Response({'message': 'Post deleted'}, status=204)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggle_like(request, post_id):
+
+    try:
+        post = Post.objects.get(id=post_id)
+
+    except Post.DoesNotExist:
+        return Response(
+            {"error": "Post not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    like = Like.objects.filter(
+        user=request.user,
+        post=post
+    ).first()
+
+    if like:
+        like.delete()
+
+        return Response({
+            "liked": False,
+            "likes_count": post.likes.count()
+        })
+
+    Like.objects.create(
+        user=request.user,
+        post=post
+    )
+
+    return Response({
+        "liked": True,
+        "likes_count": post.likes.count()
+    })
