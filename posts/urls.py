@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListCreateView, PostDetailView, toggle_like
+from .views import PostListCreateView, PostDetailView, get_user_posts, toggle_like
 
 urlpatterns = [
     path('create-post/', PostListCreateView.as_view(), name='post-list-create'),
@@ -10,4 +10,10 @@ urlpatterns = [
         toggle_like,
         name='toggle_like'
     ),
+
+    path(
+        'posts/user/<int:user_id>/',
+        get_user_posts,
+        name='user-posts'
+    ),  
 ]

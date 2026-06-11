@@ -102,6 +102,26 @@ class PostDetailView(APIView):
         return Response({'message': 'Post deleted'}, status=204)
     
 
+@api_view(['GET'])
+def get_user_posts(request, user_id):
+
+    posts = (
+        Post.objects
+        .filter(user_id=user_id)
+        .select_related(
+            'user',
+            'user__profile'
+        )
+        .order_by('-created_at')
+    )
+
+    serializer = PostSerializer(
+        posts,
+        many=True
+    )
+
+    return Response(serializer.data)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_like(request, post_id):
