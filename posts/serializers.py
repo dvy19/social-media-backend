@@ -63,5 +63,5 @@ class PostSerializer(serializers.ModelSerializer):
             'updated_at'
         ]
 
-        def get_likes_count(self, obj):
-            return obj.likes.count()
+    def get_likes_count(self, obj):
+        return obj.likes.count()

@@ -28,6 +28,7 @@ def search_users(request):
 
     print(query)
 
+    # if query != None and query != "":
     if query:
 
         profiles = Profile.objects.filter(
